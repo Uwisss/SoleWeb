@@ -1,3 +1,16 @@
+#!/bin/bash
+
+# Build the app
+npm run build
+
+# Create a temporary directory for the build
+mkdir -p dist
+
+# Copy built files to dist directory
+cp -r public/* dist/
+
+# Create a simple index.html for GitHub Pages
+cat > dist/index.html << 'EOL'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,3 +24,6 @@
     <div id="app"></div>
 </body>
 </html>
+EOL
+
+echo "Build complete! Now push to GitHub and enable GitHub Pages in settings."

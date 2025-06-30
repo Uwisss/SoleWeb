@@ -4,8 +4,11 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "start": "vite preview --port 3000"
+        "preview": "vite preview",
+        "deploy": "sh deploy.sh",
+        "build-and-deploy": "npm run build && npm run deploy"
     },
+    "homepage": "https://uwisss.github.io/SoleWeb/",
     "engines": {
         "node": ">=14.0.0"
     },
