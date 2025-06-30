@@ -1,0 +1,46 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+@layer base {
+  :root {
+    --background: 10 24 56; /* Navy blue background */
+    --foreground: 226 232 240; /* Light gray text */
+    --primary: 94 234 212; /* Teal accent color */
+    --primary-foreground: 10 24 56;
+    --border: 30 41 59;
+  }
+
+  /* Base styles */
+  html {
+    background-color: #0a1838; /* Navy blue */
+    color: rgb(var(--foreground));
+  }
+  
+  body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #0a1838 0%, #1a2748 100%);
+    color: rgb(var(--foreground));
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+  
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
