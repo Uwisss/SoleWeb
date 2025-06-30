@@ -3,9 +3,11 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build && php artisan vendor:publish --tag=laravel-assets --ansi --force",
-        "start": "php artisan serve",
-        "vercel-build": "npm install && npm run build"
+        "build": "vite build",
+        "start": "vite preview --port 3000"
+    },
+    "engines": {
+        "node": ">=14.0.0"
     },
     "dependencies": {
         "@headlessui/react": "^1.7.18",
