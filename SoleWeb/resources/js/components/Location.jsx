@@ -1,13 +1,39 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 
 const Location = () => {
   return (
     <section id="find-us" className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Find Us</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">Visit our office or get in touch with our friendly team.</p>
+        <div className="relative max-w-4xl mx-auto mb-16 px-4">
+          <motion.div 
+            className="text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.h2 
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Find <span className="text-lime-600">Us</span>
+            </motion.h2>
+
+            <motion.p 
+              className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              Visit our office or get in touch with our friendly team.
+            </motion.p>
+          </motion.div>
         </div>
         
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">

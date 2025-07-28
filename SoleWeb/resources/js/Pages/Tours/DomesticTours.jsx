@@ -2,10 +2,26 @@ import React, { useState } from 'react';
 import MainLayout from '../../Layouts/MainLayout';
 import { PageContainer } from '../../components/PageContainer';
 import TourPackageModal from '../../components/Tours/TourPackageModal';
+import { Award, Shield, MapPin, Sun, CloudRain, Luggage, Lightbulb, Mail, HelpCircle } from 'lucide-react';
 
 const DomesticTours = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  
+  const heroImages = [
+    '/img/places/boracay.png',
+    '/img/places/korea.png',
+    '/img/places/tokyo.png'
+  ];
+  
+  // Auto-rotate background images
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const openModal = (pkg) => {
     setSelectedPackage(pkg);
@@ -290,23 +306,65 @@ const DomesticTours = () => {
   ];
   return (
     <MainLayout title="Domestic Tours - Sole Explorer">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-r from-teal-700 to-teal-900 text-white">
+        {/* Background Images with Fade Transition */}
+        <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out" style={{ opacity: 1 }}>
+          <img
+            src={heroImages[activeImageIndex]}
+            alt="Domestic Tours"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-700/90 to-teal-900/80" />
+        
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">Domestic Tours</h1>
+            <p className="text-xl text-white/90 leading-relaxed">
+              Explore the breathtaking beauty of the Philippines with our handpicked domestic tour packages. 
+              From pristine beaches to majestic mountains, discover the hidden gems of our beautiful islands.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-6">
+              <div className="flex items-center text-teal-200">
+                <svg className="w-5 h-5 text-yellow-400 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span>4.8 (342 reviews)</span>
+              </div>
+              <div className="flex items-center text-teal-200">
+                <svg className="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>10+ Destinations</span>
+              </div>
+            </div>
+            
+            {/* Image Indicator Dots */}
+            <div className="flex mt-6 space-x-2">
+              {heroImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveImageIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all ${index === activeImageIndex ? 'bg-white w-8' : 'bg-white/50'}`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Tour Package Modal */}
       <TourPackageModal 
         isOpen={isModalOpen} 
         closeModal={closeModal} 
         packageDetails={selectedPackage} 
       />
-      
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-teal-600 to-emerald-700 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/img/patterns/grid.svg')] opacity-10"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold">Domestic Tours</h1>
-          </div>
-        </div>
-      </div>
-
       <PageContainer>
         {/* Featured Destinations */}
         <section className="py-16">
@@ -316,74 +374,52 @@ const DomesticTours = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                id: 1,
-                name: 'Palawan',
-                description: 'Explore the stunning lagoons and underground rivers of this tropical paradise.',
-                image: '/img/places/korea.png'
-              },
-              {
-                id: 2,
-                name: 'Boracay',
-                description: 'Relax on the world-famous white sand beaches of Boracay Island.',
-                image: '/img/places/boracay.png'
-              },
-              {
-                id: 3,
-                name: 'Cebu',
-                description: 'Experience the rich history and beautiful beaches of the Queen City of the South.',
-                image: '/img/places/tokyo.png'
-              },
-              {
-                id: 4,
-                name: 'Bohol',
-                description: 'See the Chocolate Hills and meet the adorable tarsiers in their natural habitat.',
-                image: '/img/places/Riceterraces.png'
-              },
-              {
-                id: 5,
-                name: 'Siargao',
-                description: 'Surf the famous Cloud 9 waves or relax on the beautiful beaches of Siargao Island.',
-                image: '/img/places/shangrila.png'
-              },
-              {
-                id: 6,
-                name: 'Batanes',
-                description: 'Experience the breathtaking landscapes and unique culture of the northernmost province.',
-                image: '/img/places/korea1.png'
-              }
-            ].map((destination) => {
-              const pkg = domesticPackages.find(p => p.id === destination.id) || destination;
-              return (
-                <div key={destination.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                  <div className="h-48 overflow-hidden">
-                    <img 
-                      src={destination.image} 
-                      alt={destination.name} 
-                      className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '/img/placeholder-destination.jpg';
-                      }}
-                    />
+            {domesticPackages.map((pkg) => (
+              <div key={pkg.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div className="relative h-48">
+                  <img 
+                    src={pkg.images[0]} 
+                    alt={pkg.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/img/placeholder-destination.jpg';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute top-4 right-4 bg-white/90 text-teal-700 text-sm font-medium px-3 py-1 rounded-full">
+                    {pkg.duration}
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{destination.name}</h3>
-                    <p className="text-gray-600 mb-4">{destination.description}</p>
-                    <button 
-                      onClick={() => openModal(pkg)}
-                      className="text-teal-600 font-medium hover:text-teal-700 transition-colors flex items-center"
-                    >
-                      View Packages
-                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
+                  <div className="absolute bottom-0 left-0 p-4 text-white">
+                    <h3 className="text-xl font-bold">{pkg.name}</h3>
+                    <div className="flex items-center mt-1">
+                      <MapPin className="w-4 h-4 mr-1 text-teal-300" />
+                      <span className="text-sm text-teal-100">{pkg.location}</span>
+                    </div>
                   </div>
                 </div>
-              );
-            })}
+                <div className="p-6">
+                  <p className="text-gray-600 mb-4 line-clamp-3">{pkg.description}</p>
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <span className="text-2xl font-bold text-gray-900">${pkg.price}</span>
+                      <span className="text-gray-500"> / person</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Award className="w-5 h-5 text-yellow-400 mr-1" />
+                      <span className="font-medium text-gray-900">{pkg.rating}</span>
+                      <span className="text-gray-500 ml-1">({pkg.reviewCount})</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => openModal(pkg)}
+                    className="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-300 hover:shadow-md"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -391,31 +427,30 @@ const DomesticTours = () => {
         <section className="py-16 bg-gray-50 rounded-2xl my-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Domestic Tours</h2>
-              <div className="w-24 h-1 bg-teal-500 mx-auto"></div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Why Choose Our Domestic Tours</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 {
-                  icon: '🏆',
+                  icon: <Award className="w-10 h-10 mx-auto text-teal-500 mb-4" />,
                   title: 'Best Price Guarantee',
                   description: 'We offer the most competitive prices for our domestic tour packages.'
                 },
                 {
-                  icon: '🛡️',
+                  icon: <Shield className="w-10 h-10 mx-auto text-teal-500 mb-4" />,
                   title: 'Safe & Secure',
                   description: 'Your safety is our top priority. All our partners are vetted and certified.'
                 },
                 {
-                  icon: '🌟',
+                  icon: <MapPin className="w-10 h-10 mx-auto text-teal-500 mb-4" />,
                   title: 'Local Experts',
                   description: 'Our local guides will show you the hidden gems of each destination.'
                 }
               ].map((feature, index) => (
-                <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center">
-                  <div className="text-4xl mb-4">{feature.icon}</div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
+                <div key={index} className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow duration-300">
+                  {feature.icon}
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
                   <p className="text-gray-600">{feature.description}</p>
                 </div>
               ))}
@@ -427,21 +462,24 @@ const DomesticTours = () => {
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Travel Tips for Domestic Tours</h2>
-              <div className="w-24 h-1 bg-teal-500 mx-auto"></div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Travel Tips for Domestic Tours</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <div className="text-teal-500 text-4xl mb-4">🌦️</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Best Time to Visit</h3>
+              <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div className="w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <Sun className="w-6 h-6 text-teal-500" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Best Time to Visit</h3>
                 <p className="text-gray-600">The Philippines has a tropical climate with two main seasons: dry (November to April) and wet (May to October). For beach destinations like Boracay and Palawan, the dry season is ideal.</p>
               </div>
               
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <div className="text-teal-500 text-4xl mb-4">🧳</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Packing Essentials</h3>
-                <ul className="list-disc list-inside text-gray-600 space-y-1">
+              <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div className="w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <Luggage className="w-6 h-6 text-teal-500" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Packing Essentials</h3>
+                <ul className="list-disc list-inside text-gray-600 space-y-2 pl-4">
                   <li>Light, breathable clothing</li>
                   <li>Swimwear and beach cover-ups</li>
                   <li>Sun protection (hat, sunglasses, sunscreen)</li>
@@ -450,11 +488,13 @@ const DomesticTours = () => {
                 </ul>
               </div>
               
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <div className="text-teal-500 text-4xl mb-4">💡</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Local Etiquette</h3>
+              <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div className="w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <Lightbulb className="w-6 h-6 text-teal-500" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Local Etiquette</h3>
                 <p className="text-gray-600 mb-3">Filipinos are known for their hospitality. A few tips:</p>
-                <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <ul className="list-disc list-inside text-gray-600 space-y-2 pl-4">
                   <li>Use "po" and "opo" to show respect</li>
                   <li>Remove shoes when entering homes</li>
                   <li>Dress modestly in religious sites</li>
@@ -469,11 +509,10 @@ const DomesticTours = () => {
         <section className="py-16 bg-gray-50 rounded-2xl my-8">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-              <div className="w-24 h-1 bg-teal-500 mx-auto"></div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-12">Frequently Asked Questions</h2>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-6 mb-12">
               {[
                 {
                   question: 'What is included in the tour price?',
@@ -496,16 +535,22 @@ const DomesticTours = () => {
                   answer: 'While not mandatory, we strongly recommend purchasing comprehensive travel insurance that covers trip cancellation, medical expenses, and personal belongings. This is for your protection in case of unforeseen circumstances.'
                 }
               ].map((faq, index) => (
-                <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{faq.question}</h3>
-                  <p className="text-gray-600">{faq.answer}</p>
+                <div key={index} className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-teal-500">
+                  <div className="flex items-start">
+                    <HelpCircle className="w-5 h-5 text-teal-500 mt-0.5 mr-3 flex-shrink-0" />
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{faq.question}</h3>
+                      <p className="text-gray-600">{faq.answer}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
             
-            <div className="mt-12 text-center">
+            <div className="text-center">
               <p className="text-gray-600 mb-4">Have more questions?</p>
-              <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+              <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-8 rounded-lg transition-all hover:shadow-lg hover:-translate-y-0.5 flex items-center mx-auto">
+                <Mail className="w-4 h-4 mr-2" />
                 Contact Our Support Team
               </button>
             </div>

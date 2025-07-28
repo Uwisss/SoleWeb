@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Link } from '@inertiajs/react';
 import MainLayout from '../../Layouts/MainLayout';
 import { PageContainer } from '../../components/PageContainer';
 import TourPackageModal from '../../components/Tours/TourPackageModal';
+import { StarIcon, MapPinIcon, CalendarIcon, UserIcon } from '@heroicons/react/20/solid';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
 
 const AsianCruises = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
@@ -11,10 +14,12 @@ const AsianCruises = () => {
   const openModal = (pkg) => {
     setSelectedPackage(pkg);
     setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    document.body.style.overflow = 'auto';
     setTimeout(() => setSelectedPackage(null), 300);
   };
 
@@ -30,9 +35,9 @@ const AsianCruises = () => {
       rating: 4.9,
       reviewCount: 287,
       images: [
-        '/img/places/singapore.png',
-        '/img/places/boracay.png',
         '/img/places/korea.png',
+        '/img/places/tokyo.png',
+        '/img/places/korea1.png',
       ],
       highlights: [
         'Explore vibrant cities and tropical islands',
@@ -125,14 +130,38 @@ const AsianCruises = () => {
 
   return (
     <MainLayout title="Asian Cruises - Sole Explorer">
-      <PageContainer className="py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Asian Cruises</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Explore the vibrant cultures, ancient traditions, and modern wonders of Asia&apos;s most fascinating destinations.
-          </p>
+      {/* Full-width Hero Section */}
+      <div className="relative bg-gradient-to-r from-teal-700 to-teal-900 text-white">
+        <div className="absolute inset-0 opacity-20">
+          <img
+            src="/img/places/shangrila.png"
+            alt="Asian Cruise"
+            className="w-full h-full object-cover"
+          />
         </div>
-
+        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">Asian Cruises</h1>
+            <p className="text-xl text-white/90 leading-relaxed">
+              Explore the vibrant cultures, ancient traditions, and modern wonders 
+              of Asia's most fascinating destinations.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-6">
+              <div className="flex items-center text-teal-200">
+                <StarIcon className="h-5 w-5 text-yellow-400 mr-1.5" />
+                <span>4.8 (287 reviews)</span>
+              </div>
+              <div className="flex items-center text-teal-200">
+                <MapPinIcon className="h-5 w-5 mr-1.5" />
+                <span>Multiple Destinations</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <PageContainer className="pt-16">
+        {/* Cruise Packages */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
           {cruises.map((cruise) => (
             <div 
@@ -150,18 +179,18 @@ const AsianCruises = () => {
               <div className="p-6">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-xl font-bold text-gray-900">{cruise.name}</h3>
-                  <span className="bg-purple-100 text-purple-800 text-sm font-semibold px-3 py-1 rounded-full">
+                  <span className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
                     {cruise.duration}
                   </span>
                 </div>
                 <p className="text-gray-600 mb-4">{cruise.description}</p>
                 <div className="flex justify-between items-center">
                   <div>
-                    <span className="text-2xl font-bold text-purple-600">${cruise.price}</span>
+                    <span className="text-2xl font-bold text-blue-600">${cruise.price}</span>
                     <span className="text-gray-500 text-sm ml-1">per person</span>
                   </div>
                   <button 
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
                       openModal(cruise);
@@ -175,32 +204,59 @@ const AsianCruises = () => {
           ))}
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-8 mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Why Choose an Asian Cruise?</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Diverse Cultures</h3>
-              <p className="text-gray-600 mb-6">
-                Asia is home to some of the world's most diverse cultures and ancient civilizations. 
-                Experience the rich traditions, festivals, and customs that make each destination unique.
-              </p>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Culinary Delights</h3>
-              <p className="text-gray-600">
-                Savor the authentic flavors of Asia with our onboard dining options featuring regional specialties 
-                and international cuisine prepared by world-class chefs. From street food to fine dining, every meal is an adventure.
-              </p>
+        {/* Why Choose Us */}
+        <div className="bg-gray-50 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Asian Cruises?</h2>
+              <div className="w-20 h-1 bg-teal-500 mx-auto rounded-full"></div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Modern & Ancient Wonders</h3>
-              <p className="text-gray-600 mb-6">
-                Marvel at the contrast between ancient temples and futuristic skylines. Visit UNESCO World Heritage sites, 
-                traditional villages, and bustling metropolises - all in one unforgettable journey.
-              </p>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Best Time to Cruise</h3>
-              <p className="text-gray-600">
-                The best time for an Asian cruise is typically during the spring (March-May) and fall (September-November) 
-                when the weather is pleasant and comfortable for exploration, with fewer crowds and better visibility.
-              </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: (
+                    <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                  ),
+                  title: "Best Price Guarantee",
+                  description: "We offer the best prices and value for your dream Asian cruise vacation."
+                },
+                {
+                  icon: (
+                    <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                  ),
+                  title: "Trust & Safety",
+                  description: "Your safety and satisfaction are our top priorities while you explore Asia's wonders."
+                },
+                {
+                  icon: (
+                    <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zM12 13a1 1 0 100-2 1 1 0 000 2z"></path>
+                    </svg>
+                  ),
+                  title: "24/7 Support",
+                  description: "Our cruise specialists are ready to help you plan your perfect Asian adventure."
+                }
+              ].map((feature, index) => (
+                <motion.div 
+                  key={index}
+                  className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+                >
+                  <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">{feature.title}</h3>
+                  <p className="text-gray-600 text-center">{feature.description}</p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
@@ -209,8 +265,8 @@ const AsianCruises = () => {
       {selectedPackage && (
         <TourPackageModal
           isOpen={isModalOpen}
-          onClose={closeModal}
-          packageData={selectedPackage}
+          closeModal={closeModal}
+          packageDetails={selectedPackage}
         />
       )}
     </MainLayout>

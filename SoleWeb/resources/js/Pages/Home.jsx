@@ -3,9 +3,8 @@ import { Head } from '@inertiajs/react';
 import Header from '@/components/Layout/Header';
 import Hero from '@/components/Hero';
 import PaymentBanner from '@/components/PaymentBanner';
-import TravelDeals from '@/components/TravelDeals';
-import PopularDestinations from '@/components/PopularDestinations';
-import CruiseDeals from '@/components/CruiseDeals';
+import WhyChooseUs, { OurPromise } from '@/components/WhyChooseUs';
+import OurServices from '@/components/OurServices';
 import AboutUs from '@/components/AboutUs';
 import Testimonials from '@/components/Testimonials';
 import Licenses from '@/components/Licenses';
@@ -42,9 +41,9 @@ export default function Home() {
             <main className="flex-grow">
                 <Hero />
                 <PaymentBanner />
-                <TravelDeals />
-                <PopularDestinations onLoginClick={openAuthModal} />
-                <CruiseDeals />
+                <OurServices />
+                <WhyChooseUs />
+                <OurPromise />
                 <AboutUs />
                 <Testimonials />
                 <Location />

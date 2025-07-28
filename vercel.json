@@ -2,11 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "public/index.php",
+      "src": "SoleWeb/public/index.php",
       "use": "@vercel/php"
     },
     {
-      "src": "package.json",
+      "src": "SoleWeb/package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "public"
@@ -16,11 +16,11 @@
   "routes": [
     {
       "src": "/build/(.*)",
-      "dest": "/public/build/$1"
+      "dest": "/SoleWeb/public/build/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/public/index.php"
+      "dest": "/SoleWeb/public/index.php"
     }
   ]
 }

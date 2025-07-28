@@ -1,7 +1,41 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import { StarIcon, MapPinIcon, CalendarIcon, UserIcon, ClockIcon, CurrencyDollarIcon } from '@heroicons/react/20/solid';
+import { X, Star, MapPin, Calendar, Users, Clock, DollarSign } from 'lucide-react';
+import BookingFormModal from './BookingFormModal';
+
+// This is a wrapper component to handle nested dialogs properly
+const DialogWrapper = ({ children, isOpen, onClose, className = '' }) => (
+  <Transition appear show={isOpen} as={Fragment}>
+    <Dialog as="div" className={`relative z-50 ${className}`} onClose={onClose}>
+      <Transition.Child
+        as={Fragment}
+        enter="ease-out duration-300"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="ease-in duration-200"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+      </Transition.Child>
+      <div className="fixed inset-0 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4">
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            {children}
+          </Transition.Child>
+        </div>
+      </div>
+    </Dialog>
+  </Transition>
+);
 
 const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
   if (!packageDetails) return null;
@@ -27,34 +61,63 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
   // Default images if none provided
   const displayImages = images.length > 0 ? images : ['/img/places/korea.png', '/img/places/tokyo.png', '/img/places/boracay.png'];
   const [selectedImage, setSelectedImage] = React.useState(displayImages[0]);
+  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handleBookingSuccess = (bookingData) => {
+    console.log('Booking successful:', bookingData);
+    // Close both modals after successful booking
+    closeBookingForm();
+    closeModal();
+  };
+
+  const openBookingForm = () => {
+    setShowBookingForm(true);
+  };
+
+  const closeBookingForm = () => {
+    setShowBookingForm(false);
+  };
+
+  // This function handles the close of the main modal
+  const handleCloseModal = () => {
+    if (showBookingForm) {
+      closeBookingForm();
+    } else {
+      closeModal();
+    }
+  };
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={closeModal}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <Dialog.Panel className="w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+    <>
+      {/* Main Tour Details Modal */}
+      <DialogWrapper isOpen={isOpen} onClose={handleCloseModal}>
+        <Dialog.Panel className="w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all relative">
+          {/* Show semi-transparent overlay when booking form is open */}
+          <Transition
+            show={showBookingForm}
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10 flex items-center justify-center p-4">
+              <div 
+                className="relative z-20 w-full max-w-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <BookingFormModal
+                  isOpen={showBookingForm}
+                  closeModal={closeBookingForm}
+                  packageDetails={packageDetails}
+                  onBookingSuccess={handleBookingSuccess}
+                />
+              </div>
+            </div>
+          </Transition>
                 {/* Header */}
                 <div className="flex justify-between items-center p-6 border-b border-gray-200">
                   <Dialog.Title as="h3" className="text-2xl font-bold text-gray-900">
@@ -66,7 +129,7 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
                     onClick={closeModal}
                   >
                     <span className="sr-only">Close</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                    <X className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
 
@@ -116,7 +179,7 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
                           <div>
                             <h2 className="text-2xl font-bold text-gray-900">{name}</h2>
                             <div className="mt-1 flex items-center text-gray-600">
-                              <MapPinIcon className="h-5 w-5 mr-1 text-teal-500" />
+                              <MapPin className="h-5 w-5 mr-1 text-teal-500" />
                               <span>{location || 'Various Locations'}</span>
                             </div>
                           </div>
@@ -129,7 +192,7 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
                         <div className="mt-4 flex items-center">
                           <div className="flex items-center">
                             {[0, 1, 2, 3, 4].map((star) => (
-                              <StarIcon
+                              <Star
                                 key={star}
                                 className={`h-5 w-5 ${star < (rating || 4.5) ? 'text-teal-500 fill-current' : 'text-gray-300 fill-current'}`}
                                 aria-hidden="true"
@@ -199,7 +262,7 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
                           
                           <div className="mt-4 space-y-4">
                             <div className="flex items-center">
-                              <CalendarIcon className="h-5 w-5 text-teal-500 mr-3" />
+                              <Calendar className="h-5 w-5 text-teal-500 mr-3" />
                               <div>
                                 <p className="text-sm text-gray-500">Duration</p>
                                 <p className="font-medium text-gray-800">{duration || '6 Days / 5 Nights'}</p>
@@ -207,7 +270,7 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
                             </div>
                             
                             <div className="flex items-center">
-                              <UserIcon className="h-5 w-5 text-teal-500 mr-3" />
+                              <Users className="h-5 w-5 text-teal-500 mr-3" />
                               <div>
                                 <p className="text-sm text-gray-500">Group Size</p>
                                 <p className="font-medium text-gray-800">2-12 People</p>
@@ -215,7 +278,7 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
                             </div>
                             
                             <div className="flex items-center">
-                              <ClockIcon className="h-5 w-5 text-teal-500 mr-3" />
+                              <Clock className="h-5 w-5 text-teal-500 mr-3" />
                               <div>
                                 <p className="text-sm text-gray-500">Availability</p>
                                 <p className="font-medium text-gray-800">Year Round</p>
@@ -223,7 +286,7 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
                             </div>
                             
                             <div className="flex items-center">
-                              <CurrencyDollarIcon className="h-5 w-5 text-teal-500 mr-3" />
+                              <DollarSign className="h-5 w-5 text-teal-500 mr-3" />
                               <div>
                                 <p className="text-sm text-gray-500">Starting From</p>
                                 <p className="font-medium text-xl text-teal-600">${price?.toLocaleString() || '1,299'}</p>
@@ -273,6 +336,7 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
 
                           <button
                             type="button"
+                            onClick={openBookingForm}
                             className="mt-8 w-full bg-teal-600 hover:bg-teal-700 text-white py-3 px-4 rounded-lg font-medium transition-colors"
                           >
                             Book Now
@@ -289,12 +353,11 @@ const TourPackageModal = ({ isOpen, closeModal, packageDetails }) => {
                     </div>
                   </div>
                 </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition>
+        </Dialog.Panel>
+      </DialogWrapper>
+      
+      {/* Booking form is now rendered inside the main modal overlay */}
+    </>
   );
 };
 

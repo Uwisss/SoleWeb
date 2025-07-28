@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../ui/button';
@@ -33,17 +33,61 @@ const Header = ({ onLoginClick, onSignupClick }) => {
 
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
-  let leaveTimer = null;
+  const leaveTimerRef = useRef(null);
+
+  // Clear timeout on component unmount
+  useEffect(() => {
+    return () => {
+      if (leaveTimerRef.current) {
+        clearTimeout(leaveTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleMouseEnter = (linkName) => {
+    if (leaveTimerRef.current) {
+      clearTimeout(leaveTimerRef.current);
+    }
+    setOpenDropdown(linkName);
+  };
+
+  const handleMouseLeave = () => {
+    leaveTimerRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 300); // 300ms delay before closing
+  };
+
+  const handleDropdownEnter = () => {
+    if (leaveTimerRef.current) {
+      clearTimeout(leaveTimerRef.current);
+    }
+  };
+
+  const handleDropdownLeave = () => {
+    leaveTimerRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 300); // 300ms delay before closing
+  };
 
   const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'Destinations', href: '#popular-destinations' },
     { 
       name: 'Tours', 
       href: '/tours',
       submenu: [
         { name: 'Domestic Tours', href: '/tours/domestic' },
-        { name: 'International Tours', href: '/tours/international' }
+        { name: 'International Tours', href: '/tours/international' },
+        { name: 'Corporate & Group Travel (MICE)', href: '/tours/corporate' },
+        { name: 'Group Tours', href: '/tours/group-tours' },
+        { name: 'Day Tours & Excursions', href: '/tours/day-tours' }
+      ]
+    },
+    {
+      name: 'Agreements',
+      href: '/agreements',
+      submenu: [
+        { name: 'Terms and Conditions', href: '/agreements/terms' },
+        { name: 'Refund Policy', href: '/agreements/refund' },
+        { name: 'Booking Terms', href: '/agreements/booking' }
       ]
     },
     { 
@@ -52,21 +96,29 @@ const Header = ({ onLoginClick, onSignupClick }) => {
       submenu: [
         { name: 'Caribbean Cruises', href: '/cruises/caribbean' },
         { name: 'Asian Cruises', href: '/cruises/asian' },
-        { name: 'All Cruise Deals', href: '/cruises' }
+        { name: '2GO Cruises', href: '/cruises/2go' },
+      
       ]
     },
     { 
-      name: 'Visa', 
-      href: '/visa',
+      name: 'Bookings', 
+      href: '/booking/flights',
       submenu: [
-        { name: 'Visa Requirements', href: '/visa/requirements' },
-        { name: 'Visa Application', href: '/visa/application' },
-        { name: 'Visa Status Check', href: '/visa/status' },
-        { name: 'Visa Types', href: '/visa/types' }
+        { name: 'Flight Booking', href: '/booking/flights' },
+        { name: 'Hotel Reservations', href: '/booking/hotels' },
+        { name: 'Transportation Services', href: '/booking/transportation' }
+      ]
+    },
+    { 
+      name: 'Documentation', 
+      href: '/documentation/visa-processing',
+      submenu: [
+        { name: 'Visa Processing', href: '/documentation/visa-processing' },
+        { name: 'Travel Insurance', href: '/documentation/travel-insurance' },
+        { name: 'Passport Assistance', href: '/documentation/passport-assistance' }
       ]
     },
     { name: 'About Us', href: '#about' },
-    { name: 'Contact', href: '#contact' },
   ];
 
   const isActive = (href) => {
@@ -133,134 +185,121 @@ const Header = ({ onLoginClick, onSignupClick }) => {
 
   // Nav link classes
   const getNavLinkClasses = (isActive) => {
-    const baseClasses = 'text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg';
+    const baseClasses = 'text-sm font-medium transition-all duration-200 px-3 py-2.5 rounded-lg group relative';
     
     if (isActive) {
       return isScrolled
-        ? `${baseClasses} text-lime-600 bg-lime-50 shadow-md shadow-lime-100`
+        ? `${baseClasses} text-lime-600 bg-lime-50/90 shadow-md shadow-lime-100/50`
         : `${baseClasses} text-white bg-white/20 backdrop-blur-sm`;
     }
     
     return isScrolled
-      ? `${baseClasses} text-gray-700 hover:text-lime-600 hover:bg-gray-50/80`
+      ? `${baseClasses} text-gray-600 hover:text-lime-600 hover:bg-gray-50/80`
       : `${baseClasses} text-white/90 hover:text-white hover:bg-white/10`;
+  };
+
+  // Toggle mobile dropdown
+  const toggleMobileDropdown = (linkName) => {
+    setOpenDropdown(openDropdown === linkName ? null : linkName);
   };
 
   return (
     <header 
       className={`fixed w-full z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-lg py-1 sm:py-2' 
-          : 'bg-transparent py-2 sm:py-4'
+          ? 'bg-white/95 backdrop-blur-md shadow-lg py-2' 
+          : 'bg-transparent py-3'
       }`}
     >
       {/* Preload colors to prevent flash */}
       <div className="hidden opacity-0 pointer-events-none">
         <div className="bg-white/90 bg-transparent from-white to-gray-200 from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 bg-teal-500/10 hover:bg-teal-500/20 bg-teal-500/20 hover:bg-teal-500/30 bg-gradient-to-r from-teal-500 to-emerald-500"></div>
       </div>
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group transition-all duration-300 hover:scale-105">
-            <div className={`flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl transition-all duration-300 group-hover:shadow-lg ${
-              isScrolled 
-                ? 'bg-white/10 backdrop-blur-sm group-hover:bg-white/20' 
-                : 'bg-white/20 group-hover:bg-white/30'
-            }`}>
-              <img 
-                src="/img/SoleLogo.png" 
-                alt="Sole Explorer Logo" 
-                className="h-7 sm:h-8 w-auto transition-transform duration-300 group-hover:scale-110"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className={`text-xl sm:text-2xl font-bold bg-clip-text text-transparent leading-none ${
+          <div className="flex items-center flex-shrink-0">
+            <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group transition-all duration-300 hover:scale-105">
+              <div className={`flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl transition-all duration-300 group-hover:shadow-lg ${
                 isScrolled 
-                  ? 'bg-gradient-to-r from-lime-500 to-green-500' 
-                  : 'bg-gradient-to-r from-white to-teal-200'
+                  ? 'bg-white/10 backdrop-blur-sm group-hover:bg-white/20' 
+                  : 'bg-white/20 group-hover:bg-white/30'
               }`}>
-                SOLE EXPLORER
-              </span>
-              <span className={`text-[10px] sm:text-xs uppercase tracking-wider mt-0.5 ${
-                isScrolled ? 'text-lime-400/90' : 'text-teal-100/90'
-              }`}>
-                TRAVEL AND TOURS
-              </span>
-            </div>
-          </Link>
-
+                <img 
+                  src="/img/SoleLogo.png" 
+                  alt="Sole Explorer Logo" 
+                  className="h-7 sm:h-8 w-auto transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+              <div className="hidden sm:flex flex-col">
+                <span className={`text-xl sm:text-2xl font-bold bg-clip-text text-transparent leading-none ${
+                  isScrolled 
+                    ? 'bg-gradient-to-r from-lime-600 to-green-600' 
+                    : 'bg-gradient-to-r from-white to-teal-200'
+                }`}>
+                  SOLE EXPLORER
+                </span>
+                <span className={`hidden md:block text-xs md:text-sm font-medium ${
+                  isScrolled ? 'text-gray-500' : 'text-white/80'
+                }`}>
+                  Travel & Tours
+                </span>
+              </div>
+            </Link>
+          </div>
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
-            {navLinks.map((link) => (
+          <nav className="hidden lg:flex items-center space-x-1">
+            {navLinks.map((link, index) => (
               <div 
-                key={link.name} 
-                className="relative group" 
-                onMouseEnter={() => {
-                  if (link.submenu) {
-                    clearTimeout(leaveTimer);
-                    setOpenDropdown(link.name);
-                    setIsHovering(true);
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (link.submenu) {
-                    setIsHovering(false);
-                    leaveTimer = setTimeout(() => {
-                      if (!isHovering) {
-                        setOpenDropdown(null);
-                      }
-                    }, 300);
-                  }
-                }}
+                key={index} 
+                className="relative group"
+                onMouseEnter={() => handleMouseEnter(link.name)}
+                onMouseLeave={handleMouseLeave}
               >
-                <div className="flex items-center">
-                  <Link
-                    href={link.href}
-                    className={`${getNavLinkClasses(isActive(link.href))} text-sm lg:text-base flex items-center`}
-                    onClick={(e) => {
-                      if (link.submenu) {
-                        e.preventDefault();
-                        setOpenDropdown(openDropdown === link.name ? null : link.name);
-                      }
-                    }}
-                  >
-                    {link.name}
-                    {link.submenu && (
-                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    )}
-                  </Link>
-                </div>
-                
-                {link.submenu && openDropdown === link.name && (
+                <Link
+                  href={link.href}
+                  className={`${getNavLinkClasses(isActive(link.href))} flex items-center whitespace-nowrap`}
+                >
+                  {link.name}
+                  {link.submenu && (
+                    <svg
+                      className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+                        openDropdown === link.name ? 'transform rotate-180' : ''
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  )}
+                </Link>
+
+                {link.submenu && (
                   <div 
-                    className="absolute left-0 mt-0 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50"
-                    onMouseEnter={() => {
-                      clearTimeout(leaveTimer);
-                      setIsHovering(true);
-                      setOpenDropdown(link.name);
-                    }}
-                    onMouseLeave={() => {
-                      setIsHovering(false);
-                      leaveTimer = setTimeout(() => {
-                        setOpenDropdown(null);
-                      }, 300);
-                    }}
+                    className={`absolute left-1/2 -translate-x-1/2 mt-2 w-64 rounded-lg shadow-xl bg-white/95 backdrop-blur-sm ring-1 ring-black/5 py-2 transition-all duration-200 ease-in-out transform origin-top ${
+                      openDropdown === link.name ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+                    }`}
+                    onMouseEnter={handleDropdownEnter}
+                    onMouseLeave={handleDropdownLeave}
                   >
-                    <div className="py-1" role="menu" aria-orientation="vertical">
-                      {link.submenu.map((subItem) => (
-                        <Link
-                          key={subItem.name}
-                          href={subItem.href}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                          role="menuitem"
-                          onClick={() => setOpenDropdown(null)}
-                        >
-                          {subItem.name}
-                        </Link>
-                      ))}
-                    </div>
+                    {link.submenu.map((subItem, subIndex) => (
+                      <Link
+                        key={subIndex}
+                        href={subItem.href}
+                        className="group relative block px-4 py-2.5 text-sm text-gray-700 transition-all duration-200 hover:pl-6 hover:bg-gradient-to-r hover:from-lime-50 hover:to-white"
+                      >
+                        <span className="relative z-10 flex items-center">
+                          <span className="absolute left-0 w-1 h-6 -ml-2 bg-lime-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
+                          <span className="ml-1">{subItem.name}</span>
+                        </span>
+                      </Link>
+                    ))}
                   </div>
                 )}
               </div>
@@ -268,41 +307,42 @@ const Header = ({ onLoginClick, onSignupClick }) => {
           </nav>
 
           {/* Desktop Auth Buttons - Hidden on mobile */}
-          <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
+          <div className="hidden lg:flex items-center space-x-3">
             <Button
               variant="outline"
-              className={`${getButtonClasses('outline')} group hover:bg-lime-50 border-2 px-3 sm:px-4 h-9 sm:h-10`}
+              className={`${getButtonClasses('outline')} group hover:bg-lime-50 border-2 px-4 h-10`}
               onClick={onLoginClick}
             >
-              <LogIn className={`w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 transition-colors ${isScrolled ? 'text-lime-600 group-hover:text-gray-900' : 'text-white group-hover:text-gray-900'}`} />
-              <span className={`text-xs sm:text-sm font-semibold transition-colors ${isScrolled ? 'text-lime-600 group-hover:text-gray-900' : 'text-white group-hover:text-gray-900'}`}>
+              <LogIn className={`w-4 h-4 mr-2 transition-colors ${isScrolled ? 'text-lime-600 group-hover:text-gray-900' : 'text-white group-hover:text-gray-900'}`} />
+              <span className={`text-sm font-semibold transition-colors ${isScrolled ? 'text-lime-600 group-hover:text-gray-900' : 'text-white group-hover:text-gray-900'}`}>
                 LOGIN
               </span>
             </Button>
             <Button
-              className={`${getButtonClasses('solid')} bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-400 hover:to-green-400 text-white font-semibold border-0 px-3 sm:px-4 h-9 sm:h-10`}
+              className={`${getButtonClasses('solid')} bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-400 hover:to-green-400 text-white font-semibold border-0 px-4 h-10`}
               onClick={onSignupClick}
             >
-              <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
-              <span className="text-xs sm:text-sm">SIGN UP</span>
+              <UserPlus className="w-4 h-4 mr-2" />
+              <span className="text-sm">SIGN UP</span>
             </Button>
           </div>
 
-          {/* Mobile Menu Button - Always visible on mobile */}
-          <div className="md:hidden flex items-center">
+          {/* Mobile menu button */}
+          <div className="lg:hidden flex items-center ml-4">
             <button
-              className={`p-1.5 sm:p-2 rounded-full transition-all duration-200 ${
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={`inline-flex items-center justify-center p-2 rounded-md transition-colors ${
                 isScrolled 
                   ? 'text-gray-700 hover:bg-gray-100' 
-                  : 'text-white hover:bg-white/10'
+                  : 'text-white/90 hover:bg-white/10'
               }`}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded="false"
             >
+              <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
-                <X size={22} className="text-gray-700" />
+                <X className="block h-6 w-6" aria-hidden="true" />
               ) : (
-                <Menu size={22} className={isScrolled ? 'text-gray-700' : 'text-white'} />
+                <Menu className="block h-6 w-6" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -317,7 +357,7 @@ const Header = ({ onLoginClick, onSignupClick }) => {
             animate={{ opacity: 1, y: 0, height: 'auto' }}
             exit={{ opacity: 0, y: -20, height: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="md:hidden w-full bg-white/95 backdrop-blur-sm shadow-lg overflow-hidden fixed left-0 right-0"
+            className="lg:hidden w-full bg-white/95 backdrop-blur-sm shadow-lg overflow-hidden fixed left-0 right-0 z-40"
             style={{ top: '4.5rem' }}
           >
             <div className="container mx-auto px-4 py-4">
@@ -346,14 +386,19 @@ const Header = ({ onLoginClick, onSignupClick }) => {
                             <Link
                               key={subItem.name}
                               href={subItem.href}
-                              className={`block py-2 px-4 rounded-lg text-base font-medium transition-colors duration-200 ${
+                              className={`group relative block py-2.5 px-4 rounded-lg text-base font-medium transition-all duration-200 ${
                                 isActive(subItem.href)
-                                  ? 'text-lime-500 font-semibold'
-                                  : 'text-gray-600 hover:bg-gray-50 hover:text-lime-500'
+                                  ? 'text-lime-600 font-semibold bg-lime-50 pl-6'
+                                  : 'text-gray-600 hover:bg-lime-50/50 hover:text-lime-600 hover:pl-6'
                               }`}
                               onClick={() => setIsMenuOpen(false)}
                             >
-                              {subItem.name}
+                              <span className="relative z-10 flex items-center">
+                                <span className={`absolute left-0 w-1 h-6 -ml-2 bg-lime-500 rounded-full transition-opacity duration-200 ${
+                                  isActive(subItem.href) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                                }`}></span>
+                                <span className="ml-1">{subItem.name}</span>
+                              </span>
                             </Link>
                           ))}
                         </div>
@@ -363,7 +408,7 @@ const Header = ({ onLoginClick, onSignupClick }) => {
                         href={link.href}
                         className={`block py-3 px-4 rounded-lg text-base font-medium transition-colors duration-200 ${
                           isActive(link.href)
-                            ? 'bg-lime-50 text-transparent bg-clip-text bg-gradient-to-r from-lime-500 to-green-500 font-semibold'
+                            ? 'bg-lime-50 text-lime-600 font-semibold'
                             : 'text-gray-700 hover:bg-gray-50 hover:text-lime-500'
                         }`}
                         onClick={() => setIsMenuOpen(false)}
@@ -376,11 +421,11 @@ const Header = ({ onLoginClick, onSignupClick }) => {
                 <div className="pt-2 border-t border-gray-100 mt-2 space-y-3">
                   <Button
                     variant="outline"
-                    className="w-full border-lime-500 text-transparent bg-clip-text bg-gradient-to-r from-lime-500 to-green-500 hover:bg-lime-50 font-medium py-3 h-auto text-base"
+                    className="w-full border-lime-500 text-lime-600 hover:bg-lime-50 font-medium py-3 h-auto text-base"
                     onClick={() => handleMobileMenuClick(onLoginClick)}
                   >
                     <LogIn className="w-5 h-5 mr-2 text-lime-500" />
-                    <span className="bg-gradient-to-r from-lime-500 to-green-500 bg-clip-text text-transparent">Login</span>
+                    <span>Login</span>
                   </Button>
                   <Button
                     className="w-full bg-gradient-to-r from-lime-500 to-green-500 text-white hover:from-lime-400 hover:to-green-400 font-medium py-3 h-auto text-base"
@@ -395,8 +440,6 @@ const Header = ({ onLoginClick, onSignupClick }) => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Auth Modal is now managed by parent component */}
     </header>
   );
 };

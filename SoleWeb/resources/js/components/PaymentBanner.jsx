@@ -3,6 +3,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CreditCard, ShieldCheck, Zap, Mail, MapPin, CheckCircle, Clock, Lock, Gift, ArrowRight } from 'lucide-react';
 import { Button } from './UI/button';
 
+// Add the animation to the global styles
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  .animate-gradient-shift {
+    background-size: 200% 200%;
+    animation: gradient-shift 15s ease infinite;
+  }
+`;
+document.head.appendChild(style);
+
 // Import all payment method images
 const paymentIcons = {
   visa: '/img/payment/visa.png',
@@ -52,9 +68,10 @@ const PaymentBanner = () => {
     return () => clearInterval(interval);
   }, [isHovered]);
   return (
-    <div className="relative bg-gradient-to-br from-[#0f2d3a] via-[#1f5262] to-[#1f9a8e] overflow-hidden">
+    <div className="relative bg-[#0f2d3a] overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0f2d3a] via-[#1f5262] to-[#1f9a8e] animate-gradient-shift" />
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden opacity-30">
+      <div className="absolute inset-0 overflow-hidden opacity-30 z-0">
         {[...Array(8)].map((_, i) => (
           <div 
             key={i}
@@ -72,8 +89,8 @@ const PaymentBanner = () => {
         ))}
       </div>
 
-      {/* Main content */}
-      <div className="relative max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:py-24 lg:px-8">
+      {/* Main content with z-index to appear above gradient */}
+      <div className="relative max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:py-24 lg:px-8 z-10">
         <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
           <div className="lg:col-span-1">
             <motion.div 

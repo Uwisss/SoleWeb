@@ -2,10 +2,26 @@ import React, { useState } from 'react';
 import MainLayout from '../../Layouts/MainLayout';
 import { PageContainer } from '../../components/PageContainer';
 import TourPackageModal from '../../components/Tours/TourPackageModal';
+import { Award, Shield, Globe, Plane, Sun, CloudRain, Luggage, Wifi, Heart, MapPin, CheckCircle, Mail, HelpCircle } from 'lucide-react';
 
 const InternationalTours = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  
+  const heroImages = [
+    '/img/places/tokyo.png',
+    '/img/places/korea.png',
+    '/img/places/boracay.png'
+  ];
+  
+  // Auto-rotate background images
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const openModal = (pkg) => {
     setSelectedPackage(pkg);
@@ -287,7 +303,7 @@ const InternationalTours = () => {
     {
       id: 6,
       name: 'New York City Explorer',
-      location: 'USA',
+      location: 'New York, USA',
       description: 'Experience the city that never sleeps with this comprehensive tour of New York City\'s most famous landmarks.',
       price: 2899,
       duration: '5 Days / 4 Nights',
@@ -298,28 +314,107 @@ const InternationalTours = () => {
         '/img/places/korea1.png',
         '/img/places/boracay.png',
         '/img/places/tokyo.png',
+      ],
+      highlights: [
+        'Visit Times Square and see a Broadway show',
+        'Take in the views from the Top of the Rock or Empire State Building',
+        'Walk through Central Park and visit the Metropolitan Museum of Art',
+        'See the Statue of Liberty and Ellis Island',
+        'Explore the High Line and Chelsea Market',
+        'Experience the 9/11 Memorial & Museum',
+        'Walk across the Brooklyn Bridge'
+      ],
+      itinerary: [
+        { title: 'Arrival in New York', description: 'Airport transfer and hotel check-in. Evening at leisure to explore Times Square.' },
+        { title: 'Manhattan Highlights', description: 'Visit Times Square, Rockefeller Center, and 5th Avenue shopping.' },
+        { title: 'Statue of Liberty & Ellis Island', description: 'Ferry to the Statue of Liberty and Ellis Island. Afternoon in Lower Manhattan.' },
+        { title: 'Museums & Central Park', description: 'Visit the Metropolitan Museum of Art and explore Central Park.' },
+        { title: 'Departure', description: 'Transfer to the airport for your flight home.' }
+      ],
+      priceIncludes: [
+        '4 nights accommodation in a 4-star Manhattan hotel',
+        'Daily breakfast',
+        'Airport transfers',
+        'Statue of Liberty & Ellis Island ferry ticket',
+        'Entrance to the Metropolitan Museum of Art',
+        'Hop-on-hop-off bus pass'
+      ],
+      priceExcludes: [
+        'International flights',
+        'Travel insurance',
+        'Meals not mentioned',
+        'Personal expenses',
+        'Tips and gratuities',
+        'Optional activities',
+        'US ESTA or visa'
       ]
     }
   ];
   return (
     <MainLayout title="International Tours - Sole Explorer">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white">
+        {/* Background Images with Fade Transition */}
+        <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out" style={{ opacity: 1 }}>
+          <img
+            src={heroImages[activeImageIndex]}
+            alt="International Tours"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-700/90 to-blue-900/80" />
+        
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">International Tours</h1>
+            <p className="text-xl text-white/90 leading-relaxed">
+              Discover the world's most amazing destinations with our international tour packages. 
+              From bustling cities to exotic beaches, we'll take you on unforgettable journeys across the globe.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-6">
+              <div className="flex items-center text-blue-200">
+                <svg className="w-5 h-5 text-yellow-400 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span>4.9 (256 reviews)</span>
+              </div>
+              <div className="flex items-center text-blue-200">
+                <svg className="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>20+ Countries</span>
+              </div>
+            </div>
+            
+            {/* Image Indicator Dots */}
+            <div className="flex mt-6 space-x-2">
+              {heroImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveImageIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all ${index === activeImageIndex ? 'bg-white w-8' : 'bg-white/50'}`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Tour Package Modal */}
       <TourPackageModal 
         isOpen={isModalOpen} 
         closeModal={closeModal} 
-        packageDetails={selectedPackage} 
+        packageDetails={selectedPackage}
+        onBookingSuccess={(bookingData) => {
+          console.log('Booking successful:', bookingData);
+          closeModal();
+        }}
       />
-      
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-blue-600 to-indigo-700 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/img/patterns/grid.svg')] opacity-10"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold">International Tours</h1>
-          </div>
-        </div>
-      </div>
-
       <PageContainer>
         {/* Featured Destinations */}
         <section className="py-16">
@@ -369,29 +464,47 @@ const InternationalTours = () => {
             ].map((destination) => {
               const pkg = internationalPackages.find(p => p.id === destination.id) || destination;
               return (
-                <div key={destination.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                  <div className="h-48 overflow-hidden">
+                <div key={pkg.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  <div className="relative h-48">
                     <img 
-                      src={destination.image} 
-                      alt={destination.name} 
-                      className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
+                      src={pkg.images?.[0] || pkg.image} 
+                      alt={pkg.name}
+                      className="w-full h-full object-cover"
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = '/img/placeholder-destination.jpg';
                       }}
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className="absolute top-4 right-4 bg-white/90 text-blue-700 text-sm font-medium px-3 py-1 rounded-full">
+                      {pkg.duration || '7 Days'}
+                    </div>
+                    <div className="absolute bottom-0 left-0 p-4 text-white">
+                      <h3 className="text-xl font-bold">{pkg.name}</h3>
+                      <div className="flex items-center mt-1">
+                        <MapPin className="w-4 h-4 mr-1 text-blue-300" />
+                        <span className="text-sm text-blue-100">{pkg.location}</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{destination.name}</h3>
-                    <p className="text-gray-600 mb-4">{destination.description}</p>
+                    <p className="text-gray-600 mb-4 line-clamp-3">{pkg.description}</p>
+                    <div className="flex justify-between items-center mb-4">
+                      <div>
+                        <span className="text-2xl font-bold text-gray-900">${pkg.price}</span>
+                        <span className="text-gray-500"> / person</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Award className="w-5 h-5 text-yellow-400 mr-1" />
+                        <span className="font-medium text-gray-900">{pkg.rating || '4.8'}</span>
+                        <span className="text-gray-500 ml-1">({pkg.reviewCount || '100'}+)</span>
+                      </div>
+                    </div>
                     <button 
                       onClick={() => openModal(pkg)}
-                      className="text-blue-600 font-medium hover:text-blue-700 transition-colors flex items-center"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-300 hover:shadow-md"
                     >
-                      View Packages
-                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
+                      View Details
                     </button>
                   </div>
                 </div>
@@ -401,35 +514,43 @@ const InternationalTours = () => {
         </section>
 
         {/* Call to Action */}
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-8 text-white text-center my-16">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready for Your Next Adventure?</h2>
-          <p className="text-lg mb-6 max-w-2xl mx-auto">
-            Contact us today to book your dream international tour package!
-          </p>
-          <button className="bg-white text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-medium transition-colors">
-            Get a Free Quote
-          </button>
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl p-10 text-white text-center my-16 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready for Your Next Adventure?</h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto">
+              Contact us today to book your dream international tour package!
+            </p>
+            <button className="bg-white text-blue-700 hover:bg-blue-50 px-8 py-3 rounded-lg font-medium transition-all hover:shadow-md hover:-translate-y-0.5 inline-flex items-center">
+              <Plane className="w-5 h-5 mr-2" />
+              Get a Free Quote
+            </button>
+          </div>
         </div>
 
         {/* Travel Tips Section */}
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">International Travel Tips</h2>
-              <div className="w-24 h-1 bg-blue-500 mx-auto"></div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">International Travel Tips</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <div className="text-blue-500 text-4xl mb-4">🛂</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Visa & Documentation</h3>
+              <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <Globe className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Visa & Documentation</h3>
                 <p className="text-gray-600">Check visa requirements for your destination well in advance. Ensure your passport is valid for at least 6 months beyond your travel dates and has enough blank pages.</p>
               </div>
               
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <div className="text-blue-500 text-4xl mb-4">💱</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Currency & Payments</h3>
-                <ul className="list-disc list-inside text-gray-600 space-y-1">
+              <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Currency & Payments</h3>
+                <ul className="list-disc list-inside text-gray-600 space-y-2 pl-4">
                   <li>Notify your bank of travel plans</li>
                   <li>Carry some local currency for small expenses</li>
                   <li>Use credit cards for better exchange rates</li>
@@ -437,11 +558,13 @@ const InternationalTours = () => {
                 </ul>
               </div>
               
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <div className="text-blue-500 text-4xl mb-4">🌐</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Stay Connected</h3>
+              <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <Wifi className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Stay Connected</h3>
                 <p className="text-gray-600 mb-3">Options for staying connected abroad:</p>
-                <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <ul className="list-disc list-inside text-gray-600 space-y-2 pl-4">
                   <li>International roaming plans</li>
                   <li>Local SIM cards</li>
                   <li>Portable WiFi devices</li>
@@ -456,61 +579,56 @@ const InternationalTours = () => {
         <section className="py-16 bg-blue-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Health & Safety</h2>
-              <div className="w-24 h-1 bg-blue-500 mx-auto"></div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Health & Safety</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Vaccinations & Health</h3>
-                <ul className="space-y-3">
+              <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div className="flex items-center mb-6">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                    <Heart className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900">Vaccinations & Health</h3>
+                </div>
+                <ul className="space-y-4">
                   <li className="flex items-start">
-                    <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-600">Check required and recommended vaccinations for your destination</span>
                   </li>
                   <li className="flex items-start">
-                    <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-600">Pack a basic first-aid kit with essential medications</span>
                   </li>
                   <li className="flex items-start">
-                    <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-600">Research local healthcare facilities at your destination</span>
                   </li>
                 </ul>
               </div>
               
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Travel Insurance</h3>
-                <p className="text-gray-600 mb-4">Comprehensive travel insurance is highly recommended for international travel. Ensure your policy covers:</p>
-                <ul className="space-y-3">
+              <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div className="flex items-center mb-6">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                    <Shield className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900">Travel Insurance</h3>
+                </div>
+                <p className="text-gray-600 mb-6">Comprehensive travel insurance is highly recommended for international travel. Ensure your policy covers:</p>
+                <ul className="space-y-4">
                   <li className="flex items-start">
-                    <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-600">Medical expenses and emergency evacuation</span>
                   </li>
                   <li className="flex items-start">
-                    <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-600">Trip cancellation and interruption</span>
                   </li>
                   <li className="flex items-start">
-                    <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-600">Lost or delayed baggage</span>
                   </li>
                   <li className="flex items-start">
-                    <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-600">24/7 emergency assistance</span>
                   </li>
                 </ul>
@@ -523,11 +641,10 @@ const InternationalTours = () => {
         <section className="py-16 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-              <div className="w-24 h-1 bg-blue-500 mx-auto"></div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-12">Frequently Asked Questions</h2>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-6 mb-12">
               {[
                 {
                   question: 'Do I need a visa for international travel?',
@@ -550,16 +667,22 @@ const InternationalTours = () => {
                   answer: 'Cancellation policies vary by tour and supplier. Generally, we offer full refunds for cancellations made 90+ days before departure, with decreasing percentages as the departure date approaches. Travel insurance is highly recommended to protect your investment.'
                 }
               ].map((faq, index) => (
-                <div key={index} className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{faq.question}</h3>
-                  <p className="text-gray-600">{faq.answer}</p>
+                <div key={index} className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border-l-4 border-blue-500">
+                  <div className="flex items-start">
+                    <HelpCircle className="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" />
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{faq.question}</h3>
+                      <p className="text-gray-600">{faq.answer}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
             
-            <div className="mt-12 text-center">
+            <div className="text-center">
               <p className="text-gray-600 mb-4">Can't find the answer you're looking for?</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all hover:shadow-lg hover:-translate-y-0.5 flex items-center mx-auto">
+                <Mail className="w-4 h-4 mr-2" />
                 Contact Our Travel Experts
               </button>
             </div>

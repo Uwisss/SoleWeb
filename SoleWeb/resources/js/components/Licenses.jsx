@@ -45,25 +45,49 @@ const Licenses = () => {
   return (
     <section className="py-16 md:py-24 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Our Accreditations & Licenses
-          </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            We are proud to be recognized and accredited by the leading tourism organizations in the Philippines.
-          </p>
+        <div className="relative max-w-4xl mx-auto mb-16 px-4">
+          <motion.div 
+            className="text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.h2 
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Our <span className="text-lime-600">Accreditations</span>
+            </motion.h2>
+
+            <motion.p 
+              className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              We are proud to be accredited by the following government agencies and industry organizations.
+            </motion.p>
+          </motion.div>
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
           {licenses.map((license) => (
             <motion.div 
               key={license.id}
-              className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-center text-center"
-              whileHover={{ y: -5 }}
-              initial={{ opacity: 0, y: 20 }}
+              className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex flex-col items-center text-center"
+              whileHover={{ y: -5, scale: 1.03 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ 
+                duration: 0.4,
+                ease: "easeOut"
+              }}
             >
               <div className="w-24 h-24 mb-4 flex items-center justify-center">
                 <img 

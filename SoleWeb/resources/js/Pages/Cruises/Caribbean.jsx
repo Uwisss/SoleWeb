@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Link } from '@inertiajs/react';
 import MainLayout from '../../Layouts/MainLayout';
 import { PageContainer } from '../../components/PageContainer';
 import TourPackageModal from '../../components/Tours/TourPackageModal';
+import { StarIcon, MapPinIcon, CalendarIcon, UserIcon, ClockIcon } from '@heroicons/react/20/solid';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
 
 const CaribbeanCruises = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
@@ -11,10 +14,12 @@ const CaribbeanCruises = () => {
   const openModal = (pkg) => {
     setSelectedPackage(pkg);
     setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    document.body.style.overflow = 'auto';
     setTimeout(() => setSelectedPackage(null), 300);
   };
 
@@ -117,14 +122,39 @@ const CaribbeanCruises = () => {
 
   return (
     <MainLayout title="Caribbean Cruises - Sole Explorer">
-      <PageContainer className="py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Caribbean Cruises</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover the crystal-clear waters, white sandy beaches, and vibrant cultures of the Caribbean islands.
-          </p>
+      {/* Full-width Hero Section */}
+      <div className="relative bg-gradient-to-r from-teal-700 to-teal-900 text-white">
+        <div className="absolute inset-0 opacity-20">
+          <img
+            src="/img/places/boracay.png"
+            alt="Caribbean Cruise"
+            className="w-full h-full object-cover"
+          />
         </div>
+        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">Caribbean Cruises</h1>
+            <p className="text-xl text-white/90 leading-relaxed">
+              Experience the ultimate Caribbean adventure with our luxury cruise packages. 
+              Discover pristine beaches, crystal-clear waters, and vibrant cultures.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-6">
+              <div className="flex items-center text-teal-200">
+                <StarIcon className="h-5 w-5 text-yellow-400 mr-1.5" />
+                <span>4.9 (128 reviews)</span>
+              </div>
+              <div className="flex items-center text-teal-200">
+                <MapPinIcon className="h-5 w-5 mr-1.5" />
+                <span>Multiple Destinations</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <PageContainer className="pt-16">
 
+        {/* Cruise Packages */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
           {cruises.map((cruise) => (
             <div 
@@ -167,44 +197,69 @@ const CaribbeanCruises = () => {
           ))}
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-8 mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Why Choose a Caribbean Cruise?</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Stunning Destinations</h3>
-              <p className="text-gray-600 mb-6">
-                The Caribbean is home to some of the world's most beautiful beaches and crystal-clear waters. 
-                Each island offers its own unique charm, from the vibrant culture of Jamaica to the pristine 
-                beaches of the Bahamas.
-              </p>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">All-Inclusive Experience</h3>
-              <p className="text-gray-600">
-                Our Caribbean cruises include everything you need for a perfect vacation. Enjoy gourmet dining, 
-                world-class entertainment, and luxurious accommodations, all while visiting multiple destinations 
-                without the hassle of packing and unpacking.
-              </p>
+        {/* Why Choose Us */}
+        <div className="bg-gray-50 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Caribbean Cruises?</h2>
+              <div className="w-20 h-1 bg-teal-500 mx-auto rounded-full"></div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Activities for Everyone</h3>
-              <p className="text-gray-600 mb-6">
-                Whether you're looking for adventure or relaxation, our Caribbean cruises have something for everyone. 
-                Go snorkeling in coral reefs, explore historic sites, or simply relax on the deck with a tropical drink.
-              </p>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Best Time to Cruise</h3>
-              <p className="text-gray-600">
-                The best time for a Caribbean cruise is from December to April when the weather is warm and dry. 
-                This is also the peak season, so be sure to book early to secure the best cabins and prices.
-              </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: (
+                    <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                  ),
+                  title: "Best Price Guarantee",
+                  description: "We offer the best prices and value for your dream cruise vacation."
+                },
+                {
+                  icon: (
+                    <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                  ),
+                  title: "Trust & Safety",
+                  description: "Your safety and satisfaction are our top priorities."
+                },
+                {
+                  icon: (
+                    <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zM12 13a1 1 0 100-2 1 1 0 000 2z"></path>
+                    </svg>
+                  ),
+                  title: "24/7 Support",
+                  description: "Our cruise specialists are ready to help you plan your perfect Caribbean adventure."
+                }
+              ].map((feature, index) => (
+                <motion.div 
+                  key={index}
+                  className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+                >
+                  <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">{feature.title}</h3>
+                  <p className="text-gray-600 text-center">{feature.description}</p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
       </PageContainer>
 
       {selectedPackage && (
-        <TourPackageModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          packageData={selectedPackage}
+        <TourPackageModal 
+          isOpen={isModalOpen} 
+          closeModal={closeModal} 
+          packageDetails={selectedPackage} 
         />
       )}
     </MainLayout>
